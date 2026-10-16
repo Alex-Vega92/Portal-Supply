@@ -13,6 +13,11 @@
  ],
  "havaianas": [
   {
+   "fecha": "2026-10-15",
+   "archivo": "consulta/havaianas_2026-10-15.json",
+   "nota": "PreForm + base de compra, sin composición"
+  },
+  {
    "fecha": "2026-10-08",
    "archivo": "consulta/havaianas_2026-10-08.json",
    "nota": "solo 26-27"
