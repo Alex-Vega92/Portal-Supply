@@ -2,21 +2,21 @@
  "crocs": [
   {
    "fecha": "2026-10-08",
-   "archivo": "consulta/archivo/crocs_2026-10-08.json",
+   "archivo": "consulta/crocs_2026-10-08.json",
    "nota": "4ta ventana 25-sep"
   }
  ],
  "havaianas": [
   {
    "fecha": "2026-10-08",
-   "archivo": "consulta/archivo/havaianas_2026-10-08.json",
+   "archivo": "consulta/havaianas_2026-10-08.json",
    "nota": "solo 26-27"
   }
  ],
  "heydude": [
   {
    "fecha": "2026-10-08",
-   "archivo": "consulta/archivo/heydude_2026-10-08.json",
+   "archivo": "consulta/heydude_2026-10-08.json",
    "nota": "solo SS27"
   }
  ]
