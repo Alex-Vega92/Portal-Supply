@@ -204,7 +204,7 @@
 <script>
 /* =================== CONFIG =================== */
 var CONFIG = {
-  version: 'v2.4 · 16-oct-2026',
+  version: 'v2.5 · 21-oct-2026',
   versiones: 'consulta/versiones.json',
   exceljs: 'https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js',
   marcas: [
@@ -340,7 +340,7 @@ var CONFIG = {
     var conCrocs = ids.indexOf('crocs')>=0 && DATA.crocs;
     $('fEst').hidden = !conCrocs;
     if(conCrocs && !$('fEst').options.length){
-      var cuenta = {}; DATA.crocs.mc.forEach(function(o){ var e=o.e||'Sin estatus en 4ta ventana'; cuenta[e]=(cuenta[e]||0)+1; });
+      var cuenta = {}; DATA.crocs.mc.forEach(function(o){ var e=o.e||'Sin estatus en '+ventana(); cuenta[e]=(cuenta[e]||0)+1; });
       $('fEst').innerHTML = '<option value="">Estatus Crocs: todos</option>' + Object.keys(cuenta).sort().map(function(e){ return '<option value="'+esc(e)+'">'+esc(e)+' ('+fmt(cuenta[e])+')</option>'; }).join('');
     }
   }
@@ -364,7 +364,7 @@ var CONFIG = {
     var q = norm($('q').value).trim(), toks = q ? q.split(/\s+/) : [], est = $('fEst').hidden ? '' : $('fEst').value, sinU = $('fSinUpc').checked, out = [];
     function pasa(o){
       if(grupo && o.g!==grupo) return false;
-      if(est && o.b==='crocs' && !o.hist && (o.e||'Sin estatus en 4ta ventana')!==est) return false;
+      if(est && o.b==='crocs' && !o.hist && (o.e||'Sin estatus en '+ventana())!==est) return false;
       if(est && (o.b!=='crocs' || o.hist)) return false;
       if(sinU && !(o.nu>0 || o.st)) return false;
       for(var i=0;i<toks.length;i++) if(o._k.indexOf(toks[i])<0) return false;
@@ -397,12 +397,14 @@ var CONFIG = {
     tBus = setTimeout(buscar, 320);
   }
 
+  /* PORTAL SUPPLY · ventana de compra de Crocs: se lee de crocs.json (ventana, estTitulo, colEstatus) */
+  function ventana(){ return (DATA.crocs && DATA.crocs.ventana) || '4ta ventana'; }
   function pill(o){
     if(o.b!=='crocs' || o.hist) return '';
     var e = o.e;
-    if(!e) return '<span class="pill na" title="Este modelo-color no viene en el Line List de la 4ta ventana">Sin estatus 4ta ventana</span>';
+    if(!e) return '<span class="pill na" title="Este modelo-color no trae estatus en el Line List de la '+esc(ventana())+'">Sin estatus '+esc(ventana())+'</span>';
     var c = /^not/i.test(e) ? 'no' : /only/i.test(e) ? 'win' : /available/i.test(e) ? 'ok' : 'na';
-    return '<span class="pill '+c+'" title="Line List 4ta ventana (25-sep-2026)">'+esc(e)+'</span>';
+    return '<span class="pill '+c+'" title="'+esc(o.t || (DATA.crocs && DATA.crocs.estTitulo) || 'Line List 4ta ventana (25-sep-2026)')+'">'+esc(e)+'</span>';
   }
   function fila(o, i){
     var f = foto(o), m = M[o.b];
@@ -432,12 +434,12 @@ var CONFIG = {
   function cols(o){ return o.hist ? CONFIG.histCols : DATA[o.b].hojas[o.h].cols; }
   function tabla(o){
     if(o.st) return '<div class="nosz">'+esc((DATA[o.b].hojas[o.h]||{}).sinTallas||'Este modelo-color viene en el Line List del 28-sep-2026 pero no en el PreForm: no tiene tallas, SKU ni UPC todavía.')+'</div>';
-    var cs = cols(o), f = foto(o), iEst = cs.indexOf('Estatus 4th BW 25.09.26');
+    var cs = cols(o), f = foto(o), iEst = cs.map(function(c){ return /^Estatus /.test(c); });
     var h = '<div class="tw"><table><thead><tr><th>IMAGEN</th>'+cs.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead><tbody>';
     o.r.forEach(function(r, k){
       h += '<tr>';
       if(k===0) h += '<td class="img" rowspan="'+o.r.length+'" data-fb="'+o.b+'" data-fm="'+esc(o.mc)+'">'+(f?'<img alt="'+esc(o.mc)+'" src="'+f+'">':(FOT[o.b]?'<span class="muted">Sin foto</span>':'<div class="walk" style="height:30px;justify-content:center">'+HUELLA+HUELLA+HUELLA+'</div>'))+'</td>';
-      r.forEach(function(x, j){ h += '<td'+(j===0?' class="upc"':'')+'>'+(j===iEst&&x ? pill({b:'crocs',e:x}) : v(x))+'</td>'; });
+      r.forEach(function(x, j){ h += '<td'+(j===0?' class="upc"':'')+'>'+(iEst[j]&&x ? pill({b:'crocs',e:x,t:'Line List · '+cs[j]}) : v(x))+'</td>'; });
       h += '</tr>';
     });
     return h+'</tbody></table></div>';
