@@ -1,6 +1,11 @@
 {
  "crocs": [
   {
+   "fecha": "2026-10-16",
+   "archivo": "consulta/crocs_2026-10-16.json",
+   "nota": "4ta ventana act. 16-oct (Miami Jelly + SMU Quinceañera)"
+  },
+  {
    "fecha": "2026-10-15",
    "archivo": "consulta/crocs_2026-10-15.json",
    "nota": "4ta ventana act. 15-oct (Miami Jelly)"
