@@ -1,6 +1,11 @@
 {
  "crocs": [
   {
+   "fecha": "2026-10-21",
+   "archivo": "consulta/crocs_2026-10-21.json",
+   "nota": "5ta ventana act. 21-oct"
+  },
+  {
    "fecha": "2026-10-16",
    "archivo": "consulta/crocs_2026-10-16.json",
    "nota": "4ta ventana act. 16-oct (Miami Jelly + SMU Quinceañera)"
@@ -18,6 +23,11 @@
  ],
  "havaianas": [
   {
+   "fecha": "2026-10-16",
+   "archivo": "consulta/havaianas_2026-10-16.json",
+   "nota": "PreForm + base de compra (16-oct)"
+  },
+  {
    "fecha": "2026-10-15",
    "archivo": "consulta/havaianas_2026-10-15.json",
    "nota": "PreForm + base de compra, sin composición"
@@ -29,6 +39,11 @@
   }
  ],
  "heydude": [
+  {
+   "fecha": "2026-10-12",
+   "archivo": "consulta/heydude_2026-10-12.json",
+   "nota": "SS27 + FH26"
+  },
   {
    "fecha": "2026-10-08",
    "archivo": "consulta/heydude_2026-10-08.json",
