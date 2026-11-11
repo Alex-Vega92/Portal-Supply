@@ -377,13 +377,13 @@
         </span>
       </button>
       <button class="hcard big" id="hSegE" type="button">
-        <span class="art" aria-hidden="true"><span class="num">Semáforo de llegadas</span><span class="lockb">🔒 Con contraseña</span>
+        <span class="art" aria-hidden="true"><span class="num">BI Compra Hey Dude</span><span class="lockb">🔒 Con contraseña</span>
           <span class="pipe"><i class="on"></i><b></b><i class="on"></i><b></b><i class="on"></i><b></b><i></i></span></span>
         <span class="body">
-          <span class="kicker">Origen → Tránsito → Aduana → SAP</span>
+          <span class="kicker">Arribos · Compra general · OTIF · Lineamientos</span>
           <h3>Estatus y envíos</h3>
-          <p>Dónde va cada pedido, embarques de Savino, llegadas por semana y si llega cuando lo pedimos. Tramo de control por PO: fábrica, recolección, zarpe y CEDIS.</p>
-          <span class="acc">A tiempo · Riesgo · Retraso<span class="go">Abrir</span></span>
+          <p>El mismo BI Compra 2.0 de Crocs, con la compra Hey Dude: panorama por etapa, detalle por PO con tramo de control, semáforo, proyección semanal, OTIF y Lead Time.</p>
+          <span class="acc">Adelanto · On time · Retraso<span class="go">Abrir BI</span></span>
         </span>
       </button>
     </div>
@@ -513,7 +513,7 @@
 <script>
 /* =================== CONFIG =================== */
 var CONFIG = {
-  version: 'v1.1 · 10-nov-2026',
+  version: 'v1.2 · 11-nov-2026',
   datos: 'consulta/heydude.json',
   fotos: 'consulta/fotos_heydude.json',
   portal: 'index.html',
@@ -593,7 +593,8 @@ var CONFIG = {
   var desdePortal = /(^|[?&])desde=portal(&|$)/.test(location.search);
   function ir(m){
     ['vSegLock','vCom','vEst'].forEach(function(id){ var e = $(id); if(e) e.classList.remove('on'); });
-    if((m==='compra' || m==='estatus') && window.SEG){ $('vTab').classList.remove('on'); $('vHome').classList.remove('on'); window.SEG.abrir(m); return; }
+    if(m==='estatus'){ location.href = 'bi-heydude.html'; return; }
+    if(m==='compra' && window.SEG){ $('vTab').classList.remove('on'); $('vHome').classList.remove('on'); window.SEG.abrir(m); return; }
     if(m==='ll' || m==='pf'){ modo = m; $('vHome').classList.remove('on'); $('vTab').classList.add('on'); prepVista(); window.scrollTo(0,0); }
     else { $('vTab').classList.remove('on'); $('vHome').classList.add('on'); }
   }
@@ -889,7 +890,7 @@ var CONFIG = {
     }catch(e){ $('admErr').style.color = ''; $('admErr').textContent = e.message; }
   };
   ['segBack0','segBack1','segBack2'].forEach(function(id){ $(id).onclick = function(){ location.hash = ''; }; });
-  $('toEst').onclick = function(){ location.hash = 'estatus'; };
+  $('toEst').onclick = function(){ location.href = 'bi-heydude.html'; };
   $('toCom').onclick = function(){ location.hash = 'compra'; };
 
   /* ---------- Preparación ---------- */
@@ -1169,7 +1170,7 @@ var CONFIG = {
   };
 
   window.SEG = { abrir:abrir };
-  ['hSegC','hSegE'].forEach(function(id){ var b = $(id); if(b) b.onclick = function(){ location.hash = id==='hSegC' ? 'compra' : 'estatus'; }; });
+  ['hSegC','hSegE'].forEach(function(id){ var b = $(id); if(b) b.onclick = function(){ if(id==='hSegE'){ location.href = 'bi-heydude.html'; return; } location.hash = 'compra'; }; });
 })();
 </script>
 </body>
