@@ -166,6 +166,130 @@
     select{max-width:46vw;}
   }
 </style>
+<style id="segcss">
+  /* ===== SEGUIMIENTO DE COMPRA (Compra consolidada · Estatus y envíos) ===== */
+  .sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  .hgrid.three{grid-template-columns:repeat(3,1fr);}
+  .hcard.big .art{height:178px;}
+  .hcard .lockb{position:absolute;right:14px;top:12px;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:3px 10px;display:inline-flex;gap:6px;align-items:center;z-index:2;}
+  .hcard .lockb.ok{background:rgba(47,125,79,.85);border-color:transparent;}
+  .art .pipe{display:flex;align-items:center;gap:8px;}
+  .art .pipe i{display:block;width:44px;height:44px;border-radius:12px;background:#4a4a4a;position:relative;}
+  .art .pipe i.on{background:var(--hd);box-shadow:0 0 0 4px rgba(78,134,197,.25);}
+  .art .pipe b{display:block;width:26px;height:3px;background:var(--gold);border-radius:3px;opacity:.7;}
+  .art .bars{display:flex;align-items:flex-end;gap:9px;height:110px;}
+  .art .bars i{display:block;width:26px;border-radius:6px 6px 2px 2px;background:var(--gold);}
+  .art .bars i.b{background:var(--hd);} .art .bars i.c{background:#E6D6A8;}
+  @media (prefers-reduced-motion:no-preference){
+    .art .bars i{transform-origin:bottom;animation:crece 2.8s ease-in-out infinite;}
+    .art .bars i:nth-child(2){animation-delay:.25s;} .art .bars i:nth-child(3){animation-delay:.5s;} .art .bars i:nth-child(4){animation-delay:.75s;} .art .bars i:nth-child(5){animation-delay:1s;}
+    @keyframes crece{0%,100%{transform:scaleY(.55)}50%{transform:scaleY(1)}}
+    .art .pipe i.on{animation:latido 2.4s ease-in-out infinite;}
+    .art .pipe i:nth-of-type(2).on{animation-delay:.6s;} .art .pipe i:nth-of-type(3).on{animation-delay:1.2s;}
+    @keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  }
+  /* candado */
+  .lockv{display:flex;justify-content:center;padding:40px 0 20px;}
+  .lockc{background:var(--paper);color:var(--ink);border-radius:20px;padding:30px 28px;max-width:440px;width:100%;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);text-align:center;}
+  .lockc .ic{width:62px;height:62px;border-radius:18px;background:var(--coal);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;}
+  .lockc .ic svg{width:30px;height:30px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;}
+  .lockc h2{margin:0 0 6px;font-size:22px;} .lockc p{margin:0 0 16px;color:var(--soft);font-size:14px;line-height:1.5;}
+  .lockc input[type=password]{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:10px;}
+  .lockc input[type=password]:focus{outline:none;border-color:var(--hd);}
+  .lockc .btn{width:100%;justify-content:center;}
+  .lockc .err{color:var(--no);font-size:13px;min-height:18px;margin-top:8px;}
+  .lockc .adm{margin-top:16px;font-size:12.5px;}
+  .lockc .adm button{font:inherit;background:none;border:0;color:var(--hd-d);text-decoration:underline;cursor:pointer;}
+  .admp{display:none;text-align:left;margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;font-size:13px;}
+  .admp.on{display:block;} .admp ol{padding-left:18px;margin:6px 0 10px;line-height:1.55;color:var(--soft);}
+  .admp input[type=file]{font:inherit;font-size:12.5px;margin:4px 0 10px;width:100%;}
+  /* vistas */
+  .shead{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:18px 0 14px;}
+  .shead h1{margin:0;font-size:clamp(28px,4vw,40px);letter-spacing:-.6px;line-height:1.05;}
+  .shead .lead{margin:6px 0 0;}
+  .corte{font-size:12.5px;color:#CFE0F3;background:rgba(78,134,197,.2);border:1px solid rgba(78,134,197,.45);border-radius:999px;padding:4px 12px;white-space:nowrap;}
+  .seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:3px;gap:2px;flex-wrap:wrap;}
+  .seg button{font:inherit;font-size:13px;font-weight:600;border:0;background:none;color:var(--ink);border-radius:9px;padding:7px 13px;cursor:pointer;}
+  .seg button.on{background:var(--coal);color:#fff;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0 6px;}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;}
+  .kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--kc,var(--gold));}
+  .kpi .t{font-size:11.5px;font-weight:600;color:var(--soft);letter-spacing:.4px;text-transform:uppercase;}
+  .kpi .n{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.4px;}
+  .kpi .m{font-size:11.5px;color:var(--soft);margin-top:2px;line-height:1.4;}
+  .kpi .ring{position:absolute;right:12px;top:12px;width:40px;height:40px;}
+  .rowc{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;margin:12px 0;}
+  .card2{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .rowc > *,.card2{min-width:0;}
+  .card2 h3{margin:0 0 10px;font-size:14px;font-weight:600;display:flex;gap:8px;align-items:baseline;}
+  .card2 h3 small{font-weight:400;color:var(--soft);font-size:12px;}
+  /* pipeline */
+  .pl2{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative;}
+  .stg{position:relative;border-radius:12px;padding:12px 10px 10px;background:#F5F2EA;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s,transform .15s;}
+  .stg:hover{border-color:var(--gold);transform:translateY(-2px);} .stg.on{border-color:var(--coal);}
+  .stg .k{font-size:11.5px;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;display:flex;gap:6px;align-items:center;}
+  .stg .k i{width:9px;height:9px;border-radius:50%;background:var(--sc);display:inline-block;}
+  .stg .v{font-size:22px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .stg .p{font-size:11.5px;color:var(--soft);}
+  .stg .fill{position:absolute;left:0;bottom:0;height:4px;border-radius:0 0 12px 12px;background:var(--sc);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1);}
+  .stg + .stg::before{content:'';position:absolute;left:-8px;top:50%;width:8px;height:2px;background:var(--gold);}
+  .can-l{margin-top:8px;font-size:12px;color:var(--soft);}
+  /* semáforo */
+  .sems{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .sem{font:inherit;font-size:12.5px;font-weight:600;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center;color:var(--ink);}
+  .sem i{width:10px;height:10px;border-radius:50%;background:var(--sc);} .sem b{font-variant-numeric:tabular-nums;}
+  .sem.on{border-color:var(--coal);background:var(--coal);color:#fff;}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sc);vertical-align:middle;}
+  .bdg{display:inline-block;font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--bb,#EEE);color:var(--bc,#444);}
+  /* calendario */
+  .cal{display:flex;align-items:flex-end;gap:6px;height:150px;overflow-x:auto;padding:6px 2px 0;}
+  .wk{flex:1 0 34px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+  .wk .st{width:100%;max-width:38px;display:flex;flex-direction:column-reverse;border-radius:6px 6px 3px 3px;overflow:hidden;min-height:2px;}
+  .wk .st i{display:block;width:100%;}
+  .wk .l{font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums;} .wk .q{font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .wk.on .l{color:var(--ink);font-weight:700;}
+  /* embarques */
+  .embs{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x mandatory;}
+  .emb{flex:0 0 220px;scroll-snap-align:start;border:1.5px solid var(--line);border-radius:14px;padding:12px;background:#fff;cursor:pointer;position:relative;transition:border-color .15s,transform .15s;}
+  .emb:hover{transform:translateY(-2px);border-color:var(--gold);} .emb.on{border-color:var(--coal);}
+  .emb.pre{background:#F7F5EF;border-style:dashed;}
+  .emb .r{font-size:12px;font-weight:700;letter-spacing:.2px;} .emb .o{font-size:12px;color:var(--soft);}
+  .emb .q{font-size:20px;font-weight:700;margin:6px 0 2px;font-variant-numeric:tabular-nums;}
+  .emb .ln{font-size:11.5px;color:var(--soft);line-height:1.5;} .emb .ln b{color:var(--ink);font-weight:600;}
+  .emb .sd{position:absolute;right:12px;top:12px;}
+  .emb .mv{height:4px;background:#EEE;border-radius:4px;margin-top:8px;overflow:hidden;} .emb .mv i{display:block;height:100%;background:var(--hd);border-radius:4px;}
+  /* tabla agrupada */
+  .gt td{vertical-align:top;}
+  .gt tr.g{cursor:pointer;} .gt tr.g:hover td{background:#FBF8F0;}
+  .gt td.cv{width:22px;color:var(--soft);} .gt tr.g.op td.cv{transform:rotate(90deg);}
+  .gt .sub{font-size:11.5px;color:var(--soft);}
+  .gt tr.x td{background:#F8F6F0;padding:0;}
+  .xbox{padding:14px 16px 16px;position:sticky;left:0;width:min(1156px,calc(100vw - 92px));box-sizing:border-box;white-space:normal;}
+  .gt td.ds{white-space:normal;min-width:170px;max-width:230px;line-height:1.35;}
+  .tramo{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin:4px 0 12px;}
+  .tramo::before{content:'';position:absolute;left:10%;right:10%;top:9px;height:2px;background:#DDD6C4;}
+  .fz{position:relative;padding:0 8px;text-align:left;}
+  .fz .pt{width:18px;height:18px;border-radius:50%;background:#B9B2A2;border:3px solid #F8F6F0;position:relative;z-index:1;margin-bottom:8px;}
+  .fz.ok .pt{background:var(--ok);} .fz.wa .pt{background:#D49B12;} .fz.ba .pt{background:var(--no);} .fz.na .pt{background:#D6D0C2;}
+  .fz .h{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--soft);}
+  .fz .d{font-size:15px;font-weight:700;margin-top:2px;} .fz .s{font-size:11.5px;color:var(--soft);line-height:1.45;}
+  .why{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+  .why .big{font-size:15px;font-weight:700;border-radius:999px;padding:5px 14px;background:var(--bb);color:var(--bc);}
+  .tallas{display:flex;flex-wrap:wrap;gap:6px;} .tallas span{font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-variant-numeric:tabular-nums;}
+  .tallas span b{font-weight:600;}
+  .tot td{background:#EEF5EA;font-weight:700;border-top:2px solid var(--coal);}
+  .fo2 img{width:42px;height:42px;object-fit:contain;border-radius:6px;background:#fff;}
+  .hbars .hb{display:grid;grid-template-columns:110px 1fr 70px;gap:8px;align-items:center;font-size:12.5px;margin:6px 0;}
+  .hbars .hb .tr{height:10px;background:#F0ECE1;border-radius:6px;overflow:hidden;} .hbars .hb .tr i{display:block;height:100%;background:var(--hc,var(--hd));border-radius:6px;width:0;transition:width 1s cubic-bezier(.2,.7,.2,1);}
+  .hbars .hb b{text-align:right;font-variant-numeric:tabular-nums;}
+  .fuentes{margin-top:14px;font-size:12px;color:#BDB5A2;line-height:1.6;}
+  .fuentes summary{cursor:pointer;color:var(--gold-l);font-weight:600;}
+  .fuentes li{margin:2px 0;}
+  .ghost2{font:inherit;font-size:13.5px;font-weight:600;border:1.5px solid var(--coal);background:#fff;color:var(--coal);border-radius:999px;padding:8px 16px;cursor:pointer;}
+  .ghost2:hover{background:var(--coal);color:#fff;}
+  @media (max-width:980px){ .hgrid.three{grid-template-columns:1fr 1fr;} .rowc{grid-template-columns:minmax(0,1fr);} }
+  @media (max-width:760px){ .sgrid,.hgrid.three{grid-template-columns:1fr;} .pl2{grid-template-columns:1fr 1fr;} .stg + .stg::before{display:none;} .tramo{grid-template-columns:1fr;gap:12px;} .tramo::before{display:none;} }
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -188,7 +312,7 @@
     </header>
 
     <div class="sec-h"><h2>Proceso de compra</h2><span>Igual que Crocs: Line List → PreForm → validación → templates → consolidado</span></div>
-    <div class="hgrid">
+    <div class="hgrid three">
       <button class="hcard" id="hLL" type="button">
         <span class="art" aria-hidden="true"><span class="num">Paso 1</span>
           <svg viewBox="0 0 220 130">
@@ -238,20 +362,28 @@
           <span class="acc soon">Se construye en la Fase 2 y 3<span class="go">Próximamente</span></span>
         </span>
       </button>
-      <button class="hcard soon" id="hCons" type="button" data-fase="Fase 4">
-        <span class="art" aria-hidden="true"><span class="num prox">Próximamente</span>
-          <svg viewBox="0 0 220 130">
-            <path class="l" d="M10 112 H210"/>
-            <g class="caja"><path d="M30 80 H76 V112 H30 Z M53 80 V90"/></g>
-            <g class="caja c2"><path class="hb" d="M82 80 H128 V112 H82 Z M105 80 V90"/></g>
-            <g class="caja c3"><path d="M56 46 H102 V78 H56 Z M79 46 V56"/></g>
-            <circle cx="170" cy="62" r="30" style="fill:#3A3A3A"/><path class="tick" d="M156 62 l9 9 l17 -19" style="stroke-width:3.2"/>
-          </svg></span>
+    </div>
+
+    <div class="sec-h"><h2>Seguimiento de compra</h2><span>Lo colocado y dónde va cada pedido · candado con la contraseña de Compras Crocs</span></div>
+    <div class="sgrid">
+      <button class="hcard big" id="hSegC" type="button">
+        <span class="art" aria-hidden="true"><span class="num">SS27 · FH26 · SS26</span><span class="lockb">🔒 Con contraseña</span>
+          <span class="bars"><i style="height:62px"></i><i class="b" style="height:96px"></i><i class="c" style="height:74px"></i><i style="height:108px"></i><i class="b" style="height:84px"></i></span></span>
         <span class="body">
-          <span class="kicker">Cierre</span>
+          <span class="kicker">Lo colocado</span>
           <h3>Compra consolidada</h3>
-          <p>Cada ventana por separado: lo cargado contra lo confirmado en SAP, guardado en SharePoint y reporte final con el mismo formato que Crocs.</p>
-          <span class="acc soon">Se construye en la Fase 4<span class="go">Próximamente</span></span>
+          <p>Cada temporada como se cargó: por PO, modelo-color o SKU, con canal, ventana y fecha requerida. Búsqueda de varios a la vez y descarga a Excel.</p>
+          <span class="acc">Compra por temporada<span class="go">Abrir</span></span>
+        </span>
+      </button>
+      <button class="hcard big" id="hSegE" type="button">
+        <span class="art" aria-hidden="true"><span class="num">Semáforo de llegadas</span><span class="lockb">🔒 Con contraseña</span>
+          <span class="pipe"><i class="on"></i><b></b><i class="on"></i><b></b><i class="on"></i><b></b><i></i></span></span>
+        <span class="body">
+          <span class="kicker">Origen → Tránsito → Aduana → SAP</span>
+          <h3>Estatus y envíos</h3>
+          <p>Dónde va cada pedido, embarques de Savino, llegadas por semana y si llega cuando lo pedimos. Tramo de control por PO: fábrica, recolección, zarpe y CEDIS.</p>
+          <span class="acc">A tiempo · Riesgo · Retraso<span class="go">Abrir</span></span>
         </span>
       </button>
     </div>
@@ -284,6 +416,93 @@
     </div>
   </section>
 
+  <!-- ===================== SEGUIMIENTO: CANDADO ===================== -->
+  <section class="view" id="vSegLock" aria-label="Candado de seguimiento">
+    <div class="vt"><button class="back" id="segBack0" type="button">← Menú Hey Dude</button></div>
+    <div class="lockv"><div class="lockc">
+      <span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <h2 id="lkT">Compra consolidada</h2>
+      <p>Información de compra y llegadas. Escribe la contraseña de <b>Compras Crocs</b>.</p>
+      <input id="lkPwd" type="password" autocomplete="off" placeholder="Contraseña" aria-label="Contraseña">
+      <button class="btn" id="lkGo" type="button">Abrir</button>
+      <div class="err" id="lkErr" role="alert"></div>
+      <div class="adm"><button type="button" id="admT">Actualizar los datos (administrador)</button></div>
+      <div class="admp" id="admP">
+        <ol>
+          <li>Elige el archivo <b>heydude_seguimiento.json</b> que te entregó Claude (nunca se sube a GitHub).</li>
+          <li>Escribe la contraseña de Compras Crocs arriba.</li>
+          <li>Se descarga <b>seguimiento.bin</b>: súbelo a la carpeta <b>heydude/</b> del repo Portal-Supply.</li>
+        </ol>
+        <input type="file" id="admF" accept=".json,application/json">
+        <button class="btn" id="admGo" type="button">Cifrar y descargar seguimiento.bin</button>
+        <div class="err" id="admErr"></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ===================== COMPRA CONSOLIDADA ===================== -->
+  <section class="view" id="vCom" aria-label="Compra consolidada">
+    <div class="vt"><button class="back" id="segBack1" type="button">← Menú Hey Dude</button><span class="sp"></span><button class="link" id="toEst" type="button" style="color:#CFE0F3">Ir a Estatus y envíos →</button></div>
+    <div class="shead"><div><h1>Compra consolidada</h1><p class="lead">Lo que se colocó por temporada, tal cual se cargó. Las cancelaciones y los rechazos se ven en Estatus y envíos.</p></div><span class="sp"></span><span class="corte" id="cCorte"></span></div>
+    <div class="panel">
+      <div class="tabs" id="cTabs" role="group" aria-label="Temporada"></div>
+      <div class="kpis" id="cKpis"></div>
+      <div class="rowc">
+        <div class="card2"><h3>Por canal <small>pares colocados</small></h3><div class="hbars" id="cCan"></div></div>
+        <div class="card2"><h3>Por ventana <small>pares colocados</small></h3><div class="hbars" id="cVen"></div></div>
+      </div>
+      <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="cQ" type="search" autocomplete="off" placeholder="Busca varios a la vez separados por coma: PO, modelo-color, SKU, UPC o descripción" aria-label="Buscar"></label>
+      <div class="tools">
+        <div class="seg" id="cModo" role="group" aria-label="Agrupar"><button data-m="po" class="on">Por PO</button><button data-m="mc">Por modelo-color</button><button data-m="sku">Por SKU</button></div>
+        <select id="cCanal" aria-label="Canal"></select>
+        <select id="cVent" aria-label="Ventana"></select>
+        <button class="link" id="cLimpiar" type="button">Limpiar filtros</button>
+        <span class="sp"></span>
+        <button class="ghost2" id="cCopy" type="button">Copiar tabla</button>
+        <button class="btn" id="cXls" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar detalle (SKU)</button>
+      </div>
+      <div class="summary" id="cSum" aria-live="polite"></div>
+      <div class="tw"><table class="gt"><thead id="cTh"></thead><tbody id="cTb"></tbody></table></div>
+      <div class="empty" id="cEmpty" hidden>No hay resultados con esos filtros.</div>
+      <div class="more" id="cMoreB" hidden><button class="btn ghost" id="cMore" type="button">Ver 100 más</button></div>
+    </div>
+    <details class="fuentes" id="cFue"><summary>De dónde sale cada dato</summary><ul></ul></details>
+  </section>
+
+  <!-- ===================== ESTATUS Y ENVÍOS ===================== -->
+  <section class="view" id="vEst" aria-label="Estatus y envíos">
+    <div class="vt"><button class="back" id="segBack2" type="button">← Menú Hey Dude</button><span class="sp"></span><button class="link" id="toCom" type="button" style="color:#CFE0F3">← Ir a Compra consolidada</button></div>
+    <div class="shead"><div><h1>Estatus y envíos</h1><p class="lead">Dónde va cada pedido y si llega cuando lo pedimos. El semáforo compara la semana estimada de llegada a CEDIS contra la semana que pedimos (fecha requerida + días de tránsito).</p></div><span class="sp"></span><span class="corte" id="eCorte"></span></div>
+    <div class="panel">
+      <div class="tabs" id="eTabs" role="group" aria-label="Temporada"></div>
+      <div class="kpis" id="eKpis"></div>
+      <div class="rowc">
+        <div class="card2"><h3>Dónde está <small>pares vigentes · toca una etapa para filtrar</small></h3><div class="pl2" id="ePipe"></div><div class="can-l" id="eCan"></div></div>
+        <div class="card2"><h3 id="eCalT">Llegadas por semana <small>semana estimada a CEDIS</small></h3><div class="cal" id="eCal"></div></div>
+      </div>
+      <div class="card2" id="eEmbBox" style="margin-bottom:12px;"><h3>Embarques Savino <small>toca uno para ver sus pedidos</small></h3><div class="embs" id="eEmb"></div></div>
+      <div class="sems" id="eSem" role="group" aria-label="Semáforo"></div>
+      <label class="search" style="margin-top:12px;"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="eQ" type="search" autocomplete="off" placeholder="Busca varios a la vez separados por coma: PO, Sales Document, modelo-color, SKU, contenedor o referencia" aria-label="Buscar"></label>
+      <div class="tools">
+        <select id="eVent" aria-label="Ventana"></select>
+        <select id="eCanal" aria-label="Canal"></select>
+        <select id="eEstat" aria-label="Estatus"></select>
+        <select id="eOrig" aria-label="Origen"></select>
+        <button class="link" id="eLimpiar" type="button">Limpiar filtros</button>
+        <span class="sp"></span>
+        <button class="ghost2" id="eCopy" type="button">Copiar tabla</button>
+        <button class="btn" id="eXls" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar detalle (SKU)</button>
+      </div>
+      <div class="summary" id="eSum" aria-live="polite"></div>
+      <div class="tw"><table class="gt"><thead id="eTh"></thead><tbody id="eTb"></tbody></table></div>
+      <div class="empty" id="eEmpty" hidden>No hay resultados con esos filtros.</div>
+      <div class="more" id="eMoreB" hidden><button class="btn ghost" id="eMore" type="button">Ver 100 más</button></div>
+    </div>
+    <details class="fuentes" id="eFue"><summary>De dónde sale cada dato y cómo se calcula</summary><ul></ul></details>
+  </section>
+
   <footer class="foot"><span>Creado por <strong>Alejandro Vega</strong> · Supply Planning</span><span>Compras Hey Dude · Portal Supply · <span id="ver"></span> · datos al <span id="fdat"></span></span></footer>
 </div>
 
@@ -294,7 +513,7 @@
 <script>
 /* =================== CONFIG =================== */
 var CONFIG = {
-  version: 'v1.0 · 10-nov-2026',
+  version: 'v1.1 · 10-nov-2026',
   datos: 'consulta/heydude.json',
   fotos: 'consulta/fotos_heydude.json',
   portal: 'index.html',
@@ -373,13 +592,15 @@ var CONFIG = {
   var modo = 'll', hoja = lsGet('hoja') || 'hyd', lista = [], mostrados = 0, PAG = 100;
   var desdePortal = /(^|[?&])desde=portal(&|$)/.test(location.search);
   function ir(m){
+    ['vSegLock','vCom','vEst'].forEach(function(id){ var e = $(id); if(e) e.classList.remove('on'); });
+    if((m==='compra' || m==='estatus') && window.SEG){ $('vTab').classList.remove('on'); $('vHome').classList.remove('on'); window.SEG.abrir(m); return; }
     if(m==='ll' || m==='pf'){ modo = m; $('vHome').classList.remove('on'); $('vTab').classList.add('on'); prepVista(); window.scrollTo(0,0); }
     else { $('vTab').classList.remove('on'); $('vHome').classList.add('on'); }
   }
   function onHash(){ var h = location.hash.replace('#',''); ir(h); }
   $('hLL').onclick = function(){ location.hash = 'll'; };
   $('hPF').onclick = function(){ location.hash = 'pf'; };
-  ['hCompra','hCons'].forEach(function(id){ $(id).onclick = function(){ toast('Esta parte se construye en la '+this.getAttribute('data-fase')+'. Por ahora: Line List y PreForm.'); }; });
+  ['hCompra'].forEach(function(id){ $(id).onclick = function(){ toast('Esta parte se construye en la '+this.getAttribute('data-fase')+'. Por ahora: Line List y PreForm.'); }; });
   $('toHome').onclick = function(){ if(desdePortal){ location.href = CONFIG.portal; } else { location.hash = ''; } };
   window.addEventListener('hashchange', onHash);
 
@@ -535,6 +756,9 @@ var CONFIG = {
     });
   }
 
+  /* Ayudas compartidas con el módulo de seguimiento */
+  window.HYD = { cargando:cargando, avance:avance, listo:listo, toast:toast, cargarExcelJS:cargarExcelJS, fot:function(){ return FOT; } };
+
   /* ---------- Entrada ---------- */
   if(desdePortal) $('toHome').textContent = '← Portal Supply';
   cargando('Abriendo Hey Dude', 'Line List y PreForm de SS27, FH26 y FH27…');
@@ -543,13 +767,409 @@ var CONFIG = {
     avance('Trayendo las fotos…');
     return getJSON(CONFIG.fotos).then(function(f){ FOT = f.fotos||{}; }).catch(function(){ FOT = {}; });
   }).then(function(){
-    var m = /(^|[?&])ir=(ll|pf)(&|$)/.exec(location.search);
+    var m = /(^|[?&])ir=(ll|pf|compra|estatus)(&|$)/.exec(location.search);
     if(m && !location.hash) location.hash = m[2]; else onHash();
     return listo();
   }).catch(function(e){
     $('lmsg').textContent = 'No se pudieron leer los datos de Hey Dude';
     $('lsub').textContent = e.message+'. Revisa que exista consulta/heydude.json en el repo.';
   });
+})();
+</script>
+<script>
+/* =================== SEGUIMIENTO DE COMPRA · Compra consolidada + Estatus y envíos ===================
+   Datos cifrados en heydude/seguimiento.bin (AES-GCM, llave PBKDF2 de la contraseña de Compras Crocs).
+   La contraseña nunca está escrita aquí: solo la huella que ya usa Compras Crocs para validar que es la correcta. */
+(function(){
+  var SEGCFG = { bin:'heydude/seguimiento.bin', iter:250000, accHash:'c5aa0ddbec3700e8' };
+  var $ = function(id){ return document.getElementById(id); };
+  var H = window.HYD;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmt(n){ return Number(n||0).toLocaleString('es-MX'); }
+  function pct(a,b){ return b ? Math.round(a/b*1000)/10 : 0; }
+  var MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  function pd(s){ if(!s) return null; var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function fF(s){ var d = pd(s); return d ? d.getDate()+'-'+MES[d.getMonth()]+'-'+String(d.getFullYear()).slice(2) : '—'; }
+  function fC(s){ var d = pd(s); return d ? d.getDate()+' '+MES[d.getMonth()] : '—'; }
+  /* Semana como Excel WEEKNUM(fecha) (empieza en domingo), igual que el master de llegadas */
+  function wk(s){ var d = pd(s); if(!d) return null; var j = new Date(d.getFullYear(),0,1); var doy = Math.round((d-j)/864e5)+1; return Math.floor((doy-1+j.getDay())/7)+1; }
+  var SUN0 = new Date(2023,0,1);
+  function widx(s){ var d = pd(s); return d ? Math.floor(Math.round((d-SUN0)/864e5)/7) : null; }
+  function dias(a,b){ var x = pd(a), y = pd(b); return x && y ? Math.round((y-x)/864e5) : null; }
+  function norm(v){ return String(v||'').toUpperCase().replace(/\s+/g,''); }
+  function hh(str){var h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0;i<str.length;i++){var ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (h2>>>0).toString(16).padStart(8,'0')+(h1>>>0).toString(16).padStart(8,'0');}
+  function pwdOk(p){ return hh('ACCESO|'+norm(p)) === SEGCFG.accHash; }
+
+  /* ---------- Cifrado ---------- */
+  async function llave(pwd, salt, uso){
+    var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(norm(pwd)), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey({ name:'PBKDF2', salt:salt, iterations:SEGCFG.iter, hash:'SHA-256' }, km, { name:'AES-GCM', length:256 }, false, [uso]);
+  }
+  async function gz(txt){ return new Uint8Array(await new Response(new Blob([txt]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer()); }
+  async function ungz(buf){ return new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).text(); }
+  async function cifrar(txt, pwd){
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    var ct = new Uint8Array(await crypto.subtle.encrypt({ name:'AES-GCM', iv:iv }, await llave(pwd, salt, 'encrypt'), await gz(txt)));
+    var out = new Uint8Array(4+16+12+ct.length); out.set(new TextEncoder().encode('HYD1'),0); out.set(salt,4); out.set(iv,20); out.set(ct,32); return out;
+  }
+  async function descifrar(buf, pwd){
+    var u = new Uint8Array(buf);
+    if(new TextDecoder().decode(u.slice(0,4)) !== 'HYD1') throw new Error('El archivo seguimiento.bin no tiene el formato esperado');
+    var pt;
+    try{ pt = await crypto.subtle.decrypt({ name:'AES-GCM', iv:u.slice(20,32) }, await llave(pwd, u.slice(4,20), 'decrypt'), u.slice(32)); }
+    catch(e){ var er = new Error('pwd'); er.pwd = true; throw er; }
+    return JSON.parse(await ungz(pt));
+  }
+
+  /* ---------- Estado ---------- */
+  var S = null, destino = 'compra';
+  var SEM = {
+    ade:{ t:'Adelanto', c:'#4E86C5', bb:'#E3EDF8', bc:'#245A93' },
+    ok:{ t:'A tiempo', c:'#2F7D4F', bb:'#E3F1E7', bc:'#1E5A37' },
+    rie:{ t:'Riesgo +1–2 sem', c:'#D49B12', bb:'#FBF0D5', bc:'#7A5600' },
+    ret:{ t:'Retraso +3 sem', c:'#A63A2B', bb:'#F7E2DE', bc:'#7E2418' },
+    sin:{ t:'Sin plan original', c:'#A8A293', bb:'#EEEBE3', bc:'#5D584D' },
+    can:{ t:'Cancelado', c:'#55524B', bb:'#E4E1DA', bc:'#3A3833' }
+  };
+  var ORDEN_SEM = ['ret','rie','sin','ok','ade','can'];
+  var ETAPAS = [ ['Origen','#BC9831'], ['Tránsito','#4E86C5'], ['Aduana','#D49B12'], ['SAP','#2F7D4F'] ];
+  function semDe(l){
+    if(l.e === 'Cancelado') return 'can';
+    if(!l.eo || !l.ee) return 'sin';
+    var dw = widx(l.ee) - widx(l.eo);
+    return dw < 0 ? 'ade' : dw === 0 ? 'ok' : dw <= 2 ? 'rie' : 'ret';
+  }
+  function bdgSem(k, txt){ var s = SEM[k]; return '<span class="bdg" style="--bb:'+s.bb+';--bc:'+s.bc+'">'+esc(txt||s.t)+'</span>'; }
+  function motivo(l){
+    if(l.e === 'Cancelado') return { t: l.t==='SS27' ? 'Rechazado MOQ' : 'Cancelado', k:'can' };
+    if(!l.eo || !l.ee) return { t:'Sin plan original', k:'sin' };
+    var tot = dias(l.eo, l.ee), fab = (l.fr && l.ex) ? dias(l.fr, l.ex) : 0, log = tot - Math.max(fab,0), k = semDe(l);
+    if(tot <= 0) return { t: tot < 0 ? 'Adelanto '+tot+' d' : 'En plan', k:k };
+    if(fab >= log && fab > 0) return { t:'Fábrica +'+fab+' d', k:k };
+    return { t:(l.e==='SAP' ? 'Logística' : (l.rf ? 'Naviera/tránsito' : 'Recolección'))+' +'+Math.max(log,0)+' d', k:k };
+  }
+
+  /* ---------- Candado ---------- */
+  function abrir(m){
+    destino = m;
+    ['vHome','vTab','vSegLock','vCom','vEst'].forEach(function(id){ var e = $(id); if(e) e.classList.remove('on'); });
+    window.scrollTo(0,0);
+    if(!S){ $('lkT').textContent = m==='compra' ? 'Compra consolidada' : 'Estatus y envíos'; $('vSegLock').classList.add('on'); $('lkErr').textContent=''; setTimeout(function(){ $('lkPwd').focus(); }, 60); return; }
+    if(m==='compra'){ $('vCom').classList.add('on'); pintarCompra(); }
+    else { $('vEst').classList.add('on'); pintarEst(); }
+  }
+  async function entrar(){
+    var p = $('lkPwd').value;
+    if(!pwdOk(p)){ $('lkErr').textContent = 'Contraseña incorrecta'; $('lkPwd').select(); return; }
+    H.cargando('Abriendo el seguimiento', 'Descifrando la información de compra…');
+    try{
+      var r = await fetch(SEGCFG.bin, { cache:'no-cache' });
+      if(!r.ok) throw new Error('Todavía no está heydude/seguimiento.bin en el repo ('+r.status+')');
+      S = await descifrar(await r.arrayBuffer(), p);
+      prep(); $('lkPwd').value = '';
+      document.querySelectorAll('.hcard .lockb').forEach(function(b){ b.classList.add('ok'); b.innerHTML = '✓ Abierto'; });
+      await H.listo(); abrir(destino);
+    }catch(e){ await H.listo(); $('lkErr').textContent = e.pwd ? 'La contraseña no abre este archivo' : e.message; }
+  }
+  $('lkGo').onclick = entrar;
+  $('lkPwd').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+  $('admT').onclick = function(){ $('admP').classList.toggle('on'); };
+  $('admGo').onclick = async function(){
+    $('admErr').textContent = '';
+    var f = $('admF').files[0], p = $('lkPwd').value;
+    if(!f){ $('admErr').textContent = 'Elige el archivo heydude_seguimiento.json'; return; }
+    if(!pwdOk(p)){ $('admErr').textContent = 'Escribe arriba la contraseña de Compras Crocs (la correcta)'; return; }
+    try{
+      var txt = await f.text(), j = JSON.parse(txt);
+      if(!j.compra || !j.est) throw new Error('Ese archivo no es heydude_seguimiento.json');
+      var bin = await cifrar(txt, p);
+      var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([bin], { type:'application/octet-stream' })); a.download = 'seguimiento.bin';
+      document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+      $('admErr').style.color = 'var(--ok)'; $('admErr').textContent = 'Listo: se descargó seguimiento.bin ('+fmt(bin.length)+' bytes). Súbelo a heydude/ y borra el .json de tu computadora si no lo necesitas.';
+    }catch(e){ $('admErr').style.color = ''; $('admErr').textContent = e.message; }
+  };
+  ['segBack0','segBack1','segBack2'].forEach(function(id){ $(id).onclick = function(){ location.hash = ''; }; });
+  $('toEst').onclick = function(){ location.hash = 'estatus'; };
+  $('toCom').onclick = function(){ location.hash = 'compra'; };
+
+  /* ---------- Preparación ---------- */
+  var TEMPS = ['SS27','FH26','SS26'];
+  function prep(){
+    S.compra = S.compra.map(function(r){ return { t:r[0], v:r[1], pc:r[2], c:r[3], mc:r[4], d:r[5], ta:r[6], sku:r[7], upc:r[8], q:r[9], fr:r[10], en:r[11] }; });
+    S.compra.forEach(function(r){ r._s = [r.pc, r.mc, r.sku, r.upc, r.d].join(' | ').toLowerCase(); });
+    S.est.forEach(function(l){
+      l.k = semDe(l); l.mo = motivo(l); l.sku = l.mc+'-'+l.ta;
+      l._s = [l.pc, l.ps, l.sd, l.mc, l.sku, l.d, l.ct, l.rf].join(' | ').toLowerCase();
+    });
+    var f = function(id, arr, cal){ var ul = $(id).querySelector('ul'); ul.innerHTML = arr.map(function(x){ return '<li><b>'+esc(x.dato)+'</b> · '+esc(x.archivo)+(x.parte?' · <i>'+esc(x.parte)+'</i>':'')+'</li>'; }).join('') + (cal||''); };
+    var tr = S.transito, txtTr = TEMPS.map(function(t){ var o = tr[t]; return t+': VN '+o.Vietnam+' · CN '+o.China+' · KH '+o.Cambodia+' · ID '+o.Indonesia; }).join(' / ');
+    f('cFue', S.fuentes.filter(function(x){ return /Compra|Acumulado/.test(x.dato); }));
+    f('eFue', S.fuentes, '<li><b>Semana plan</b> = fecha requerida (Elastic en SS27, OOB en SS26/FH26) + días de tránsito estándar ('+esc(txtTr)+').</li>'+
+      '<li><b>Semana estimada</b> = llegada a CEDIS del master; en embarques Savino con zarpe real se usa zarpe + tránsito.</li>'+
+      '<li><b>Semáforo</b>: estimada contra plan · Adelanto (antes) · A tiempo (misma semana) · Riesgo (+1 a +2) · Retraso (+3 o más).</li>'+
+      '<li><b>A tiempo %</b> = pares vigentes que llegan en su semana o antes ÷ pares vigentes con plan. <b>Completo %</b> = vigente ÷ colocado. <b>OTIF %</b> = pares vigentes a tiempo ÷ pares colocados con plan (cálculo propuesto).</li>');
+    $('cCorte').textContent = $('eCorte').textContent = 'Corte '+fF(S.corte);
+  }
+  function terms(q){ return q.split(',').map(function(s){ return s.trim().toLowerCase(); }).filter(Boolean); }
+  function match(s, T){ if(!T.length) return true; for(var i=0;i<T.length;i++) if(s.indexOf(T[i])>=0) return true; return false; }
+  function opts(sel, vals, todos){ var cur = sel.value; sel.innerHTML = '<option value="">'+todos+'</option>' + vals.map(function(v){ return '<option'+(v===cur?' selected':'')+'>'+esc(v)+'</option>'; }).join(''); if(vals.indexOf(cur)<0) sel.value=''; }
+  function uniq(a){ return Array.from(new Set(a)).filter(function(x){ return x!=null && x!==''; }).sort(); }
+  function tabsHTML(id, cur, tot){ return ['Todas'].concat(TEMPS).map(function(t){ return '<button class="tab" type="button" data-t="'+t+'" aria-pressed="'+(t===cur)+'">'+t+'<small>'+fmt(tot(t))+' pares</small></button>'; }).join(''); }
+  function anim(el, fin){ var t0 = performance.now(), dur = 700; (function paso(t){ var p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,3); el.textContent = fmt(Math.round(fin*e)); if(p<1) requestAnimationFrame(paso); })(t0); }
+  function kpi(t, n, m, color, isPct){ return '<div class="kpi" style="--kc:'+(color||'var(--gold)')+'"><div class="t">'+esc(t)+'</div><div class="n" data-n="'+n+'"'+(isPct?' data-p="1"':'')+'>'+(typeof n==='string' ? esc(n) : isPct ? n+'%' : fmt(n))+'</div>'+(m?'<div class="m">'+m+'</div>':'')+'</div>'; }
+  function animK(box){ box.querySelectorAll('.n[data-n]').forEach(function(el){ if(!el.dataset.p && !isNaN(+el.dataset.n)) anim(el, +el.dataset.n); }); }
+  function hbars(el, pares, color){
+    var mx = Math.max.apply(null, pares.map(function(p){ return p[1]; }).concat([1]));
+    el.innerHTML = pares.map(function(p){ return '<div class="hb"><span>'+esc(p[0])+'</span><span class="tr"><i style="--hc:'+(color||'var(--hd)')+'" data-w="'+(p[1]/mx*100)+'"></i></span><b>'+fmt(p[1])+'</b></div>'; }).join('') || '<div class="sub">Sin datos</div>';
+    requestAnimationFrame(function(){ el.querySelectorAll('i[data-w]').forEach(function(i){ i.style.width = i.dataset.w+'%'; }); });
+  }
+  function sumBy(arr, f){ var m = {}; arr.forEach(function(r){ var k = f(r); m[k] = (m[k]||0) + r.q; }); return Object.keys(m).sort().map(function(k){ return [k, m[k]]; }); }
+  function copiar(cols, rows){
+    var t = [cols.join('\t')].concat(rows.map(function(r){ return r.map(function(x){ return x==null?'':String(x).replace(/\t|\n/g,' '); }).join('\t'); })).join('\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function(){ H.toast('Tabla copiada: '+fmt(rows.length)+' renglones. Pégala en Excel.'); })
+      .catch(function(){ var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); H.toast('Tabla copiada.'); });
+  }
+  function excel(nombre, hoja, cols, rows){
+    H.cargando('Armando tu Excel', 'Preparando el generador…');
+    return H.cargarExcelJS().then(function(){
+      var wb = new ExcelJS.Workbook(); wb.creator = 'Portal Supply';
+      var ws = wb.addWorksheet(hoja.slice(0,31), { views:[{ state:'frozen', ySplit:1 }] });
+      var an = cols.map(function(c){ return c.length; });
+      rows.forEach(function(r){ r.forEach(function(x,j){ var l = x==null ? 0 : String(x).length; if(l>an[j]) an[j]=l; }); });
+      ws.columns = cols.map(function(c,j){ return { header:c, width:Math.max(9, Math.min(46, an[j]+3)) }; });
+      var hr = ws.getRow(1); hr.font = { bold:true, color:{ argb:'FFFFFFFF' } }; hr.fill = { type:'pattern', pattern:'solid', fgColor:{ argb:'FF2F2F2F' } }; hr.height = 22;
+      ws.autoFilter = { from:{ row:1, column:1 }, to:{ row:1, column:cols.length } };
+      rows.forEach(function(r){ ws.addRow(r); });
+      H.avance('Guardando…', 95);
+      return wb.xlsx.writeBuffer();
+    }).then(function(buf){
+      var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+      a.download = nombre+'.xlsx'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+      return H.listo();
+    }).catch(function(e){ H.listo(); H.toast('No se pudo generar el Excel: '+e.message); });
+  }
+  function fechasRango(arr){ var f = uniq(arr.map(function(r){ return r.fr; })); return f.length ? (f.length===1 ? fF(f[0]) : fF(f[0])+' – '+fF(f[f.length-1])) : '—'; }
+
+  /* =================== COMPRA CONSOLIDADA =================== */
+  var C = { t:'SS27', modo:'po', n:100, lista:[] };
+  function pintarCompra(){
+    var tot = function(t){ return S.compra.reduce(function(a,r){ return a + ((t==='Todas'||r.t===t) ? r.q : 0); }, 0); };
+    $('cTabs').innerHTML = tabsHTML('cTabs', C.t, tot);
+    $('cTabs').querySelectorAll('.tab').forEach(function(b){ b.onclick = function(){ C.t = b.dataset.t; pintarCompra(); }; });
+    var base = S.compra.filter(function(r){ return C.t==='Todas' || r.t===C.t; });
+    opts($('cCanal'), uniq(base.map(function(r){ return r.c; })), 'Canal: todos');
+    opts($('cVent'), uniq(base.map(function(r){ return r.v; })), 'Ventana: todas');
+    filtrarCompra(true);
+  }
+  function filtrarCompra(kpis){
+    var T = terms($('cQ').value), can = $('cCanal').value, ven = $('cVent').value;
+    var L = S.compra.filter(function(r){ return (C.t==='Todas' || r.t===C.t) && (!can || r.c===can) && (!ven || r.v===ven) && match(r._s, T); });
+    var q = L.reduce(function(a,r){ return a+r.q; },0), pos = uniq(L.map(function(r){ return r.t+'|'+r.pc; })).length, mcs = uniq(L.map(function(r){ return r.mc; })).length;
+    var res = C.t==='Todas' ? null : S.resumen[C.t];
+    $('cKpis').innerHTML = kpi('Pares colocados', q, res && !T.length && !can && !ven ? 'Cuadra con el archivo de compra' : 'Con los filtros aplicados', 'var(--coal)') +
+      kpi('POs', pos, 'Órdenes de compra cargadas', 'var(--gold)') + kpi('Modelos-color', mcs, fmt(L.length)+' SKU-talla', 'var(--hd)') +
+      kpi('Pares por modelo-color', mcs ? Math.round(q/mcs) : 0, 'Promedio', '#8DB6E3');
+    animK($('cKpis'));
+    hbars($('cCan'), sumBy(L, function(r){ return r.c; }), 'var(--hd)');
+    hbars($('cVen'), sumBy(L, function(r){ return (C.t==='Todas' ? r.t+' · ' : '')+r.v; }), 'var(--gold)');
+    var g = {}, key = C.modo==='po' ? function(r){ return r.t+'|'+r.pc; } : C.modo==='mc' ? function(r){ return r.t+'|'+r.mc; } : function(r){ return r.t+'|'+r.pc+'|'+r.sku; };
+    L.forEach(function(r){ var k = key(r); (g[k] = g[k] || []).push(r); });
+    C.lista = Object.keys(g).map(function(k){ return g[k]; }).sort(function(a,b){ return TEMPS.indexOf(a[0].t)-TEMPS.indexOf(b[0].t) || String(a[0].pc).localeCompare(b[0].pc) || String(a[0].mc).localeCompare(b[0].mc); });
+    C.n = 100; $('cSum').textContent = fmt(C.lista.length)+(C.modo==='po'?' POs':C.modo==='mc'?' modelos-color':' SKU')+' · '+fmt(q)+' pares'+(T.length>1?' · búsqueda de '+T.length+' términos':'');
+    tablaCompra();
+  }
+  var FOTO0 = '<span style="display:inline-block;width:42px;height:42px;border-radius:6px;background:#F1EEE6"></span>';
+  function foto(mc){ var F = H.fot(); return F && F[mc] ? '<img loading="lazy" alt="" src="data:image/jpeg;base64,'+F[mc]+'">' : FOTO0; }
+  function colsCompra(){
+    if(C.modo==='po') return ['Temporada','Ventana','PO','Canal','Modelos-color','SKU','Pares','Fecha requerida'];
+    if(C.modo==='mc') return ['','Temporada','Modelo-color','Descripción','POs','Tallas','Pares','Fecha requerida'];
+    return ['Temporada','Ventana','PO','Canal','Modelo-color','Descripción','Talla','SKU','UPC','Pares','Fecha requerida','Envío Elastic'];
+  }
+  function filaCompra(G){
+    var r = G[0], q = G.reduce(function(a,x){ return a+x.q; },0);
+    if(C.modo==='po') return [r.t, r.v, r.pc, r.c, uniq(G.map(function(x){ return x.mc; })).length, G.length, q, fechasRango(G)];
+    if(C.modo==='mc') return [null, r.t, r.mc, r.d, uniq(G.map(function(x){ return x.pc; })).length, uniq(G.map(function(x){ return x.ta; })).join(', '), q, fechasRango(G)];
+    return [r.t, r.v, r.pc, r.c, r.mc, r.d, r.ta, r.sku, r.upc||'FALTA UPC', q, r.fr?fF(r.fr):'—', r.en||''];
+  }
+  function tablaCompra(){
+    var cols = colsCompra(), numC = cols.indexOf('Pares');
+    $('cTh').innerHTML = '<tr>'+cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr>';
+    var vis = C.lista.slice(0, C.n), tq = 0;
+    C.lista.forEach(function(G){ G.forEach(function(x){ tq += x.q; }); });
+    $('cTb').innerHTML = vis.map(function(G){
+      var f = filaCompra(G);
+      return '<tr>'+f.map(function(x,j){
+        if(C.modo==='mc' && j===0) return '<td class="fo2">'+foto(G[0].mc)+'</td>';
+        if(j===numC) return '<td style="text-align:right;font-weight:600">'+fmt(x)+'</td>';
+        if(x==='FALTA UPC') return '<td><span class="bdg" style="--bb:#F7E2DE;--bc:#7E2418">FALTA UPC</span></td>';
+        return '<td>'+esc(x)+'</td>';
+      }).join('')+'</tr>';
+    }).join('') + (C.lista.length ? '<tr class="tot">'+cols.map(function(c,j){ return j===0 ? '<td>Total</td>' : j===numC ? '<td style="text-align:right">'+fmt(tq)+'</td>' : '<td></td>'; }).join('')+'</tr>' : '');
+    $('cEmpty').hidden = !!C.lista.length; $('cMoreB').hidden = C.lista.length <= C.n;
+  }
+  $('cMore').onclick = function(){ C.n += 100; tablaCompra(); };
+  $('cQ').addEventListener('input', function(){ clearTimeout(C.tq); C.tq = setTimeout(function(){ filtrarCompra(); }, 180); });
+  ['cCanal','cVent'].forEach(function(id){ $(id).onchange = function(){ filtrarCompra(); }; });
+  $('cLimpiar').onclick = function(){ $('cQ').value=''; $('cCanal').value=''; $('cVent').value=''; filtrarCompra(); };
+  $('cModo').querySelectorAll('button').forEach(function(b){ b.onclick = function(){ $('cModo').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); }); C.modo = b.dataset.m; filtrarCompra(); }; });
+  $('cCopy').onclick = function(){ var cols = colsCompra(); var off = C.modo==='mc' ? 1 : 0; copiar(cols.slice(off), C.lista.map(function(G){ return filaCompra(G).slice(off); })); };
+  $('cXls').onclick = function(){
+    var rows = []; C.lista.forEach(function(G){ G.forEach(function(r){ rows.push([r.t, r.v, r.pc, r.c, r.mc, r.d, r.ta, r.sku, r.upc, r.q, r.fr ? pd(r.fr) : '', r.en||'']); }); });
+    if(!rows.length){ H.toast('No hay renglones para descargar.'); return; }
+    excel('CompraConsolidada_HeyDude_'+C.t+'_corte-'+S.corte, 'Compra '+C.t, S.compraCols, rows);
+  };
+
+  /* =================== ESTATUS Y ENVÍOS =================== */
+  var E = { t:'SS27', sem:'', etapa:'', ref:'', wk:null, n:100, lista:[], open:{} };
+  function baseEst(){ return S.est.filter(function(l){ return E.t==='Todas' || l.t===E.t; }); }
+  function pintarEst(){
+    var tot = function(t){ return S.est.reduce(function(a,l){ return a + ((t==='Todas'||l.t===t) && l.e!=='Cancelado' ? l.q : 0); }, 0); };
+    $('eTabs').innerHTML = tabsHTML('eTabs', E.t, tot).replace(/ pares</g, ' vigentes<');
+    $('eTabs').querySelectorAll('.tab').forEach(function(b){ b.onclick = function(){ E.t = b.dataset.t; E.sem=''; E.etapa=''; E.ref=''; E.wk=null; pintarEst(); }; });
+    var B = baseEst();
+    opts($('eVent'), uniq(B.map(function(l){ return l.v; })), 'Ventana: todas');
+    opts($('eCanal'), uniq(B.map(function(l){ return l.c; })), 'Canal: todos');
+    opts($('eEstat'), uniq(B.map(function(l){ return l.e; })), 'Estatus: todos');
+    opts($('eOrig'), uniq(B.map(function(l){ return l.o; })), 'Origen: todos');
+    filtrarEst();
+  }
+  function filtrarEst(){
+    var T = terms($('eQ').value), ven = $('eVent').value, can = $('eCanal').value, st = $('eEstat').value, ori = $('eOrig').value;
+    var B = baseEst().filter(function(l){ return (!ven || l.v===ven) && (!can || l.c===can) && (!st || l.e===st) && (!ori || l.o===ori) && match(l._s, T); });
+    var B2 = B.filter(function(l){ return (!E.etapa || l.e===E.etapa) && (!E.ref || l.rf===E.ref) && (E.wk==null || wk(l.ee)+'|'+(l.ee||'').slice(0,4)===E.wk); });
+    var L = B2.filter(function(l){ return !E.sem || l.k===E.sem; });
+    kpisEst(B); pipe(B); cal(B); embarques(B); sems(B2);
+    var g = {}; L.forEach(function(l){ var k = l.t+'|'+l.ps+'|'+l.pc; (g[k] = g[k] || []).push(l); });
+    E.lista = Object.keys(g).map(function(k){ var G = g[k]; G.k = peor(G); return G; })
+      .sort(function(a,b){ return ORDEN_SEM.indexOf(a.k)-ORDEN_SEM.indexOf(b.k) || String(a[0].ee||'9').localeCompare(String(b[0].ee||'9')) || String(a[0].ps).localeCompare(b[0].ps); });
+    var q = L.reduce(function(a,l){ return a+l.q; },0);
+    var f = []; if(E.etapa) f.push('etapa '+E.etapa); if(E.ref) f.push('embarque '+E.ref.replace('SDB2405','')); if(E.wk) f.push('semana '+E.wk.split('|')[0]); if(E.sem) f.push(SEM[E.sem].t);
+    $('eSum').innerHTML = fmt(E.lista.length)+' PO · '+fmt(q)+' pares'+(T.length>1?' · búsqueda de '+T.length+' términos':'')+(f.length?' · filtrado por '+esc(f.join(', '))+' <button class="link" id="eQuita">quitar</button>':'');
+    if($('eQuita')) $('eQuita').onclick = function(){ E.sem=''; E.etapa=''; E.ref=''; E.wk=null; filtrarEst(); };
+    E.n = 100; tablaEst();
+  }
+  function peor(G){ var k = 'can'; G.forEach(function(l){ if(ORDEN_SEM.indexOf(l.k) < ORDEN_SEM.indexOf(k)) k = l.k; }); return k; }
+  function kpisEst(B){
+    var col = B.reduce(function(a,l){ return a+l.q; },0), vig = B.filter(function(l){ return l.e!=='Cancelado'; }), vq = vig.reduce(function(a,l){ return a+l.q; },0);
+    var conP = vig.filter(function(l){ return l.eo && l.ee; }), cpq = conP.reduce(function(a,l){ return a+l.q; },0);
+    var ati = conP.filter(function(l){ return l.k==='ok' || l.k==='ade'; }).reduce(function(a,l){ return a+l.q; },0);
+    var colP = B.filter(function(l){ return l.eo || l.e==='Cancelado'; }).reduce(function(a,l){ return a+l.q; },0);
+    var sap = vig.filter(function(l){ return l.e==='SAP'; }).reduce(function(a,l){ return a+l.q; },0);
+    var prox = vig.filter(function(l){ return l.e!=='SAP' && l.ee; }).sort(function(a,b){ return a.ee.localeCompare(b.ee); })[0];
+    $('eKpis').innerHTML =
+      kpi('Pares vigentes', vq, 'de '+fmt(col)+' colocados · '+fmt(col-vq)+' cancelados', 'var(--coal)') +
+      kpi('En SAP', pct(sap, vq), fmt(sap)+' pares ya disponibles', '#2F7D4F', true) +
+      kpi('A tiempo', pct(ati, cpq), cpq ? fmt(ati)+' de '+fmt(cpq)+' pares con plan' : 'Sin plan original para comparar', '#4E86C5', true) +
+      kpi('Completo', pct(vq, col), 'Vigente ÷ colocado', 'var(--gold)', true) +
+      kpi('OTIF', pct(ati, colP), 'A tiempo ÷ colocado con plan · cálculo propuesto', '#8DB6E3', true) +
+      kpi('Próxima llegada', prox ? 'Sem '+wk(prox.ee) : '—', prox ? fF(prox.ee)+' · '+esc((prox.rf||'').replace('SDB2405','')||prox.o) : 'Todo está en SAP', '#D49B12');
+    animK($('eKpis'));
+  }
+  function pipe(B){
+    var vig = B.filter(function(l){ return l.e!=='Cancelado'; }), vq = vig.reduce(function(a,l){ return a+l.q; },0);
+    $('ePipe').innerHTML = ETAPAS.map(function(e){
+      var q = vig.filter(function(l){ return l.e===e[0]; }).reduce(function(a,l){ return a+l.q; },0);
+      return '<div class="stg'+(E.etapa===e[0]?' on':'')+'" data-e="'+e[0]+'" style="--sc:'+e[1]+'"><div class="k"><i></i>'+e[0]+'</div><div class="v">'+fmt(q)+'</div><div class="p">'+pct(q,vq)+'% de lo vigente</div><span class="fill" data-w="'+pct(q,vq)+'"></span></div>';
+    }).join('');
+    requestAnimationFrame(function(){ $('ePipe').querySelectorAll('.fill').forEach(function(i){ i.style.width = i.dataset.w+'%'; }); });
+    $('ePipe').querySelectorAll('.stg').forEach(function(s){ s.onclick = function(){ E.etapa = E.etapa===s.dataset.e ? '' : s.dataset.e; filtrarEst(); }; });
+    var cq = B.filter(function(l){ return l.e==='Cancelado'; }).reduce(function(a,l){ return a+l.q; },0);
+    var ret = B.filter(function(l){ return /retenid/i.test(l.co); }).reduce(function(a,l){ return a+l.q; },0);
+    $('eCan').innerHTML = (cq ? fmt(cq)+' pares cancelados o rechazados (no cuentan como vigentes)' : 'Sin cancelaciones') + (ret ? ' · <b style="color:var(--no)">'+fmt(ret)+' pares retenidos en aduana, sin fecha de liberación</b>' : '');
+  }
+  function cal(B){
+    var vig = B.filter(function(l){ return l.e!=='Cancelado' && l.ee; });
+    var pend = vig.filter(function(l){ return l.e!=='SAP'; }), usar = pend.length ? pend : vig;
+    $('eCalT').innerHTML = (pend.length ? 'Próximas llegadas por semana' : 'Llegadas por semana (ya en SAP)')+' <small>semana estimada a CEDIS · toca una barra</small>';
+    var m = {}; usar.forEach(function(l){ var k = wk(l.ee)+'|'+l.ee.slice(0,4); var w = m[k] = m[k] || { i:widx(l.ee), w:wk(l.ee), q:0, s:{} }; w.q += l.q; w.s[l.k] = (w.s[l.k]||0) + l.q; });
+    var ws = Object.keys(m).map(function(k){ m[k].key = k; return m[k]; }).sort(function(a,b){ return a.i-b.i; });
+    if(ws.length > 26) ws = ws.slice(-26);
+    var mx = Math.max.apply(null, ws.map(function(w){ return w.q; }).concat([1]));
+    $('eCal').innerHTML = ws.map(function(w){
+      var h = Math.max(4, w.q/mx*112);
+      return '<div class="wk'+(E.wk===w.key?' on':'')+'" data-k="'+w.key+'" title="Semana '+w.w+': '+fmt(w.q)+' pares"><span class="q">'+(w.q>=1000? (w.q/1000).toFixed(1)+'k' : w.q)+'</span><span class="st" style="height:'+h+'px">'+
+        ORDEN_SEM.slice().reverse().map(function(k){ return w.s[k] ? '<i style="height:'+(w.s[k]/w.q*100)+'%;background:'+SEM[k].c+'"></i>' : ''; }).join('')+'</span><span class="l">S'+w.w+'</span></div>';
+    }).join('') || '<div class="sub">Sin fechas</div>';
+    $('eCal').querySelectorAll('.wk').forEach(function(d){ d.onclick = function(){ E.wk = E.wk===d.dataset.k ? null : d.dataset.k; filtrarEst(); }; });
+  }
+  function embarques(B){
+    var show = E.t==='SS27' || E.t==='Todas';
+    $('eEmbBox').style.display = show ? '' : 'none'; if(!show) return;
+    var por = {}; B.forEach(function(l){ if(l.rf && S.sav[l.rf] && l.e!=='Cancelado'){ var p = por[l.rf] = por[l.rf] || { q:0, k:'ade', L:[] }; p.q += l.q; p.L.push(l); if(ORDEN_SEM.indexOf(l.k) < ORDEN_SEM.indexOf(p.k)) p.k = l.k; } });
+    var hoy = new Date();
+    var html = Object.keys(S.sav).filter(function(r){ return por[r]; }).sort(function(a,b){ return (S.sav[a].cedis||'').localeCompare(S.sav[b].cedis||''); }).map(function(r){
+      var s = S.sav[r], p = por[r], z = s.zarpe || s.zarpeEst, ini = pd(z), fin = pd(s.cedis), av = ini && fin ? Math.max(0, Math.min(100, (hoy-ini)/(fin-ini)*100)) : 0;
+      return '<div class="emb'+(E.ref===r?' on':'')+'" data-r="'+r+'"><span class="sd"><span class="dot" style="--sc:'+SEM[p.k].c+'" title="'+esc(SEM[p.k].t)+'"></span></span>'+
+        '<div class="r">'+esc(r.replace('SDB2405',''))+'</div><div class="o">'+esc(s.o)+' · '+esc(s.pto)+'</div><div class="q">'+fmt(p.q)+' <small style="font-size:12px;font-weight:500;color:var(--soft)">pares</small></div>'+
+        '<div class="ln">'+esc(s.est)+' · <b>'+esc(s.cont||'Sin contenedor')+'</b></div>'+
+        '<div class="ln">Zarpe <b>'+(s.zarpe ? fC(s.zarpe) : s.zarpeEst ? 'est. '+fC(s.zarpeEst) : '—')+'</b> · ETA puerto <b>'+(s.etaP ? fC(s.etaP) : 'FALTA')+'</b></div>'+
+        '<div class="ln">CEDIS <b>sem '+wk(s.cedis)+'</b> ('+fF(s.cedis)+')</div><div class="mv" title="Avance del viaje"><i style="width:'+av+'%"></i></div></div>';
+    }).join('');
+    html += (S.savNov||[]).map(function(n){ return '<div class="emb pre" title="Shipping Plan de noviembre · aún sin SKU asignado en el master"><div class="r">'+esc(n.ref.replace('SDB2405',''))+'</div><div class="o">'+esc(n.o)+' · preliminar</div><div class="q">'+fmt(n.pares)+' <small style="font-size:12px;font-weight:500;color:var(--soft)">pares</small></div><div class="ln">'+esc(n.nota)+'</div>'+(n.cedis?'<div class="ln">CEDIS <b>sem '+wk(n.cedis)+'</b> (cálculo)</div>':'')+'</div>'; }).join('');
+    $('eEmb').innerHTML = html;
+    $('eEmb').querySelectorAll('.emb[data-r]').forEach(function(d){ d.onclick = function(){ E.ref = E.ref===d.dataset.r ? '' : d.dataset.r; filtrarEst(); }; });
+  }
+  function sems(B){
+    var m = {}; B.forEach(function(l){ m[l.k] = (m[l.k]||0) + l.q; });
+    $('eSem').innerHTML = '<span class="sub" style="font-size:11.5px;font-weight:700;letter-spacing:.5px;color:var(--soft)">SEMÁFORO</span>' + ['ade','ok','rie','ret','sin','can'].map(function(k){
+      return '<button class="sem'+(E.sem===k?' on':'')+'" data-k="'+k+'" type="button" style="--sc:'+SEM[k].c+'"><i></i>'+SEM[k].t+' <b>'+fmt(m[k]||0)+'</b></button>';
+    }).join('');
+    $('eSem').querySelectorAll('.sem').forEach(function(b){ b.onclick = function(){ E.sem = E.sem===b.dataset.k ? '' : b.dataset.k; filtrarEst(); }; });
+  }
+  var COLS_E = ['','Temporada','Ventana','PO','Canal','Material','Descripción','Pares','Origen','Contenedor / Ref.','Estatus','Sem. plan','Sem. estimada','Desfase'];
+  function grupoInfo(G){
+    var l = G[0], q = G.reduce(function(a,x){ return a+x.q; },0), mcs = uniq(G.map(function(x){ return x.mc; })), est = uniq(G.map(function(x){ return x.e; }));
+    var eo = uniq(G.map(function(x){ return x.eo; })).pop(), ee = uniq(G.map(function(x){ return x.ee; })).pop();
+    return { l:l, q:q, mcs:mcs, est:est, eo:eo, ee:ee, mo:G.find(function(x){ return x.k===G.k; }).mo };
+  }
+  function tablaEst(){
+    $('eTh').innerHTML = '<tr>'+COLS_E.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr>';
+    var vis = E.lista.slice(0, E.n), tq = 0; E.lista.forEach(function(G){ G.forEach(function(x){ tq += x.q; }); });
+    $('eTb').innerHTML = vis.map(function(G, i){
+      var I = grupoInfo(G), l = I.l, key = l.t+'|'+l.ps+'|'+l.pc, op = !!E.open[key];
+      var row = '<tr class="g'+(op?' op':'')+'" data-i="'+i+'"><td class="cv">▸</td><td>'+esc(l.t)+'</td><td>'+esc(l.v)+'</td>'+
+        '<td><b>'+esc(l.ps||'—')+'</b><div class="sub">'+esc(l.pc)+'</div></td><td>'+esc(l.c)+'</td>'+
+        '<td>'+esc(I.mcs[0])+'</td><td class="ds">'+esc(l.d)+(I.mcs.length>1?'<div class="sub">+'+(I.mcs.length-1)+' modelos más</div>':'')+'</td>'+
+        '<td style="text-align:right;font-weight:600">'+fmt(I.q)+'</td><td>'+esc(l.o||'—')+'</td>'+
+        '<td>'+esc(l.ct||'—')+(l.rf?'<div class="sub">'+esc(l.rf)+'</div>':'')+'</td>'+
+        '<td>'+esc(I.est.join(' / '))+(/retenid/i.test(l.co)?'<div class="sub" style="color:var(--no)">Retenido · sin fecha</div>':'')+'</td>'+
+        '<td style="text-align:center">'+(I.eo?wk(I.eo):'—')+'</td><td style="text-align:center;font-weight:700">'+(I.ee?wk(I.ee):'—')+'</td>'+
+        '<td><span class="dot" style="--sc:'+SEM[G.k].c+'"></span> '+bdgSem(G.k, I.mo.t)+'</td></tr>';
+      return row + (op ? '<tr class="x"><td colspan="'+COLS_E.length+'">'+detalle(G, I)+'</td></tr>' : '');
+    }).join('') + (E.lista.length ? '<tr class="tot"><td></td><td>Total</td><td></td><td>'+fmt(E.lista.length)+' PO</td><td></td><td></td><td></td><td style="text-align:right">'+fmt(tq)+'</td><td colspan="6"></td></tr>' : '');
+    $('eTb').querySelectorAll('tr.g').forEach(function(tr){ tr.onclick = function(){ var G = E.lista[+tr.dataset.i], l = G[0], k = l.t+'|'+l.ps+'|'+l.pc; E.open[k] = !E.open[k]; tablaEst(); }; });
+    $('eEmpty').hidden = !!E.lista.length; $('eMoreB').hidden = E.lista.length <= E.n;
+  }
+  function fase(cls, h, d, s){ return '<div class="fz '+cls+'"><div class="pt"></div><div class="h">'+h+'</div><div class="d">'+d+'</div><div class="s">'+s+'</div></div>'; }
+  function detalle(G, I){
+    var l = I.l, sv = S.sav[l.rf], k = G.k, mo = I.mo;
+    var tot = I.eo && I.ee ? dias(I.eo, I.ee) : null, dw = I.eo && I.ee ? widx(I.ee)-widx(I.eo) : null;
+    var head = '<div class="why"><span class="big" style="--bb:'+SEM[k].bb+';--bc:'+SEM[k].bc+'">'+esc(SEM[k].t)+'</span>'+
+      (I.ee ? '<span>Llega <b>sem '+wk(I.ee)+'</b> ('+fF(I.ee)+')'+(dw!=null?' · '+(dw>0?'+':'')+dw+' sem vs plan':'')+'</span>' : '')+
+      (mo && k!=='sin' && k!=='can' ? '<span class="sub">POR QUÉ</span>'+bdgSem(k, mo.t) : '')+'</div>';
+    var fab = l.fr && l.ex ? dias(l.fr, l.ex) : null, hx = l.hx || [];
+    var f1 = fase(l.fr?'ok':'na', 'Requerimiento original', l.fr?fF(l.fr):'FALTA', 'Ventana '+esc(l.v)+(l.t==='SS27'?' · fecha de envío en Elastic':' · OOB')+(I.eo?'<br>Plan CEDIS: sem '+wk(I.eo):''));
+    var f2 = fase(fab==null?'na':fab<=0?'ok':fab<=14?'wa':'ba', 'Salida de fábrica', l.ex?fF(l.ex):'—', (fab!=null?(fab>0?'+':'')+fab+' d vs lo pedido':'Sin fecha')+(hx.length>1?'<br>Historial: '+(hx.length-1)+' cambio'+(hx.length>2?'s':'')+' ('+hx.map(function(h){ return h[0].slice(5)+'/'+fC(h[1]); }).join(' → ')+')':''));
+    var f3 = fase(l.spm?(/Pending/i.test(l.sps||'')?'wa':'ok'):(l.e==='SAP'?'ok':'na'), 'Recolección', l.spm?'SP '+esc(l.spm):(l.e==='SAP'?'Hecha':'—'), l.sps?esc(l.sps):(l.t==='SS27'?'Sin Shipping Plan aún':'—'));
+    var f4 = fase(sv?(sv.zarpe?'ok':'wa'):(l.e==='SAP'?'ok':'na'), 'Zarpe · ETA puerto', sv?(sv.etaP?fC(sv.etaP):'FALTA ETA'):(l.e==='SAP'?'Arribó':'—'), sv?esc(sv.pto)+' · zarpe '+(sv.zarpe?fC(sv.zarpe):sv.zarpeEst?'est. '+fC(sv.zarpeEst):'—')+'<br>'+esc(sv.src):(l.rf?esc(l.rf):''));
+    var f5 = fase(l.e==='SAP'?'ok':k==='ret'?'ba':k==='rie'?'wa':l.ee?'ok':'na', 'Disponible en CEDIS', I.ee?'Sem '+wk(I.ee):'—', l.e==='SAP'?'En almacén (SAP)':(I.ee?'Semana estimada · '+fF(I.ee):'')+(tot!=null?' · '+(tot>0?'+':'')+tot+' d vs plan':''));
+    var tall = G.slice().sort(function(a,b){ return a.mc.localeCompare(b.mc) || a.ta.localeCompare(b.ta, 'es', { numeric:true }); }).map(function(x){ return '<span>'+esc(I.mcs.length>1?x.mc+' ':'')+'<b>'+esc(x.ta)+'</b> · '+fmt(x.q)+(x.e==='Cancelado'?' ✕':'')+'</span>'; }).join('');
+    return '<div class="xbox">'+head+'<div class="tramo">'+f1+f2+f3+f4+f5+'</div><div class="sub" style="margin-bottom:6px">Sales Document '+esc(l.sd||'—')+' · '+fmt(G.length)+' SKU-talla'+(l.co?' · Comentario del BI: '+esc(l.co):'')+'</div><div class="tallas">'+tall+'</div></div>';
+  }
+  $('eMore').onclick = function(){ E.n += 100; tablaEst(); };
+  $('eQ').addEventListener('input', function(){ clearTimeout(E.tq); E.tq = setTimeout(filtrarEst, 180); });
+  ['eVent','eCanal','eEstat','eOrig'].forEach(function(id){ $(id).onchange = filtrarEst; });
+  $('eLimpiar').onclick = function(){ ['eQ','eVent','eCanal','eEstat','eOrig'].forEach(function(id){ $(id).value=''; }); E.sem=''; E.etapa=''; E.ref=''; E.wk=null; filtrarEst(); };
+  $('eCopy').onclick = function(){ copiar(COLS_E.slice(1), E.lista.map(function(G){ var I = grupoInfo(G), l = I.l; return [l.t, l.v, l.ps, l.c, I.mcs.join(' '), l.d, I.q, l.o, [l.ct,l.rf].filter(Boolean).join(' · '), I.est.join(' / '), I.eo?wk(I.eo):'', I.ee?wk(I.ee):'', SEM[G.k].t+' · '+I.mo.t]; })); };
+  $('eXls').onclick = function(){
+    var cols = ['Temporada','Ventana','PO cliente','PO SAP','Sales Document','Canal','Modelo-color','Descripción','Talla','SKU','Pares','Estatus','Comentario','Origen','Contenedor','Referencia','Fecha requerida','ExFactory','Llegada plan CEDIS','Semana plan','Llegada estimada CEDIS','Semana estimada','Desfase (días)','Semáforo','Motivo','Shipping Plan','Estatus Shipping Plan'];
+    var rows = []; E.lista.forEach(function(G){ G.forEach(function(l){ rows.push([l.t, l.v, l.pc, l.ps, l.sd, l.c, l.mc, l.d, l.ta, l.sku, l.q, l.e, l.co, l.o, l.ct, l.rf, l.fr?pd(l.fr):'', l.ex?pd(l.ex):'', l.eo?pd(l.eo):'', l.eo?wk(l.eo):'', l.ee?pd(l.ee):'', l.ee?wk(l.ee):'', l.eo&&l.ee?dias(l.eo,l.ee):'', SEM[l.k].t, l.mo.t, l.spm||'', l.sps||'']); }); });
+    if(!rows.length){ H.toast('No hay renglones para descargar.'); return; }
+    excel('EstatusEnvios_HeyDude_'+E.t+'_corte-'+S.corte, 'Estatus '+E.t, cols, rows);
+  };
+
+  window.SEG = { abrir:abrir };
+  ['hSegC','hSegE'].forEach(function(id){ var b = $(id); if(b) b.onclick = function(){ location.hash = id==='hSegC' ? 'compra' : 'estatus'; }; });
 })();
 </script>
 </body>
